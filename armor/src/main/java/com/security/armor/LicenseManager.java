@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class LicenseManager {
 	
-	
+	private static final String salt = "YouNeverKnowSecret";
 	private static final byte [] key = new byte[]{'N','O','T','O','M','O','R','O','N','O','T','O','M','O','R','O'};
 	public static void main(String arg[]){
 		LicenseManager lm = new LicenseManager();
@@ -40,7 +40,7 @@ public class LicenseManager {
 	}
 	
 	
-	//67349047683
+
 	public String getEntropy(){
 		InetAddress ip;
 		byte [] mac = null;
@@ -244,8 +244,17 @@ public class LicenseManager {
 	}
 	
 	
-	public static void createLicense(String name, String number, String validity, String version){
+	public String createLicense(LicenseData licenseData){
+		String licenseKey = null;
+		synchronized (licenseKey) {
+			String name = licenseData.getName();
+			String macAddr = licenseData.getMacAddr();
+			String licenseType = licenseData.getType();
+			String validity = licenseData.getValidity();
+			
+			
+		}
 		
+		return licenseKey;
 	}
-	
 }
