@@ -1,5 +1,12 @@
 package com.security.armor;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -10,6 +17,7 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.sql.Savepoint;
 
 public class GenereatePKIKeys {
 
@@ -33,7 +41,7 @@ public class GenereatePKIKeys {
 			// Get the formats of the encoded bytes
 			String formatPrivate = privateKey.getFormat(); // PKCS#8
 			String formatPublic = publicKey.getFormat(); // X.509
-
+			
 			System.out.println("  Private Key Format : " + formatPrivate);
 			System.out.println("  Public Key Format  : " + formatPublic);
 
@@ -44,7 +52,12 @@ public class GenereatePKIKeys {
 
 			EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
 			PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
-
+			
+			//save public key
+			saveToFile("D:\\sandip_git\\public_key.der", publicKeyBytes);
+			//save private key
+			saveToFile("D:\\sandip_git\\private_key.der", publicKeyBytes);
+			
 			// The original and new keys are the same
 			System.out.println("  Are both private keys equal? " + privateKey.equals(privateKey2));
 
@@ -77,6 +90,23 @@ public class GenereatePKIKeys {
         generateKeys("RSA", 1024);
     }
 	
+	
+	public static void saveToFile(String path, byte[] key)  {
+		File f = new File(path);
+		f.getParentFile().mkdirs();
+
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(f);
+			fos.write(key);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 }

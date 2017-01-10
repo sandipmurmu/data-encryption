@@ -31,7 +31,7 @@ public class LicenseManager {
 		this.encryptionManager = EncryptionManager.getEncryptionManager();
 	}
 	
-	private String generateLicenseKey(LicenseContent lc){
+	public String generateLicenseKey(LicenseContent lc){
 		
 		String mac = lc.getMacAddr();
 		//this is in milliseconds

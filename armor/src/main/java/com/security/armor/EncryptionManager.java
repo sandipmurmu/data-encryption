@@ -17,8 +17,8 @@ import java.security.spec.X509EncodedKeySpec;
 public class EncryptionManager {
 
 	private static EncryptionManager instance;
-	private static final String PUBLIC_KEY_FILE="/path/public_key.der";
-	private static final String PRIVATE_KEY_FILE="/path/private_key.der";
+	private static final String PUBLIC_KEY_FILE="D:\\sandip_git\\public_key.der";
+	private static final String PRIVATE_KEY_FILE="D:\\sandip_git\\private_key.der";
 	
 	
 	private static PublicKey publicKey;
