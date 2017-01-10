@@ -17,21 +17,20 @@ public class KeyGenerator {
 
 	private static final String secret_word = "YouCanNeverKnowP";
 	
-	private String algorithm;
+
 	/**
 	 * Performs data encryption based on the desired algorithm
 	 * @param data
 	 * @param algorithm
 	 * @return
 	 */
-	public String encrypt(String data, String algorithm) throws GeneralSecurityException{
+	public static String encrypt(String data, String algorithm) throws GeneralSecurityException{
 		if(null == data){
 			throw new GeneralSecurityException("No data supplied");
 		}
 		if(null==algorithm){
 			throw new GeneralSecurityException("Algorithm not specified");
 		}
-		this.algorithm = algorithm;
 		
 		SecretKey secretKey = getSecretKey(secret_word);
 		Cipher c;
@@ -57,7 +56,7 @@ public class KeyGenerator {
 	 * @param ecryptedData
 	 * @return
 	 */
-	public String decrypt(String encryptedData) throws GeneralSecurityException{
+	public static String decrypt(String encryptedData, String algorithm) throws GeneralSecurityException{
 		if(null==encryptedData){
 			throw new GeneralSecurityException("No data supplied");
 		}
