@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,21 +19,23 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class LicenseManager {
 	
-	private static final String salt = "YouNeverKnowSecret";
-	private static final byte [] key = new byte[]{'N','O','T','O','M','O','R','O','N','O','T','O','M','O','R','O'};
+	private static final String salt = "YouCanNeverKnowF";
+	//private static final byte [] key = new byte[]{'N','O','T','O','M','O','R','O','N','O','T','O','M','O','R','O'};
 	public static void main(String arg[]){
 		LicenseManager lm = new LicenseManager();
 		String result = lm.getEntropy();
+		String time  = String.valueOf(System.currentTimeMillis());
 		System.out.println("actual: " + result);
+		System.out.println("date " + time);
 		
-		String serial = lm.getSerialNumber(result);
+		String serial = lm.getSerialNumber(result+time);
 		System.out.println("Serial: " + serial);
 		String encrypted = encrypt(serial);
-		System.out.println("encrypted: "+encrypted);
-		String activationKey = lm.generateKey(serial);
-		System.out.println("key: " + activationKey);
-		String decrypted = decrypt(encrypted);
-		System.out.println("decrypted: " +decrypted);
+		System.out.println(" encrypted "+ encrypted.toUpperCase());
+		//String activationKey = lm.generateKey(serial);
+		//System.out.println("key: " + activationKey);
+		//String decrypted = decrypt(encrypted);
+		//System.out.println("decrypted: " +decrypted);
 		//String hashed = hash(result,getSalt());
 		//System.out.println("hashed: " +hashed);
 		//String zipped = compress(hashed).toUpperCase();
@@ -92,32 +95,32 @@ public class LicenseManager {
 		 for(char c : charArray){
 			 if(Character.isDigit(c)){
 				 //System.out.println("Integer " + String.valueOf(c)); 
-				 sum = sum + Integer.parseInt(String.valueOf(c));
+				 sum += Integer.parseInt(String.valueOf(c)) + (index *2);
 			 }else if(Character.isLetter(c)){
 				//System.out.println("character " + String.valueOf(c)); 
 				 switch (String.valueOf(c)) {
 					case "A":
-						sum = sum + 10 * (index *2);
+						sum +=  10 + (index *2);
 						//System.out.println(" A: " + sum);
 						break;
 					case "B":
-						sum = sum + 11 * (index *2);
+						sum +=  11 + (index *2);
 						//System.out.println(" B: " + sum);
 						break;
 					case "C":
-						sum = sum + 12 * (index *2);
+						sum +=  12 + (index *2);
 						//System.out.println(" C: " + sum);
 						break;
 					case "D":
-						sum = sum + 13 * (index *2);
+						sum +=  13 + (index *2);
 						//System.out.println(" D: " + sum);
 						break;
 					case "E":
-						sum = sum + 14 * (index *2);
+						sum +=  14 + (index *2);
 						//System.out.println(" E: " + sum);
 						break;
 					case "F":
-						sum = sum + 15 * (index *2);
+						sum +=  15 + (index *2);
 						//System.out.println(" F: " + sum);
 						break;
 					
@@ -134,6 +137,7 @@ public class LicenseManager {
 	 * @param serial
 	 * @return
 	 */
+	@Deprecated
 	private static String generateKey(String serial){
 		String key = null;
 		Long x = Long.valueOf(serial);
@@ -141,6 +145,7 @@ public class LicenseManager {
 		return String.valueOf(y);
 	}
 	
+	@Deprecated
 	private static String hash(String h, byte [] salt){
 		String hexString = null;
 		try {
@@ -156,7 +161,7 @@ public class LicenseManager {
 		return hexString;
 	}
 	
-	
+	@Deprecated
 	private static String compress(String data){
 		Map<Character, Integer> map = new HashMap<Character, Integer>();
 		char [] chars = data.toCharArray();
@@ -190,13 +195,13 @@ public class LicenseManager {
 			// algorithm/mode/padding , 
 			Cipher c = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 	        c.init(Cipher.ENCRYPT_MODE, k);
-	        encVal = c.doFinal(data.getBytes());
+	        encVal = c.doFinal(data.getBytes("UTF-8"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-        String encryptedValue = Base64.getEncoder().encodeToString(encVal);
+        String encryptedValue = Base64.getMimeEncoder().encodeToString(encVal);
         return encryptedValue;
 	}
 	
@@ -215,14 +220,14 @@ public class LicenseManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        
-       
-        String decryptedValue = new String(decValue);
+       String decryptedValue = new String(decValue);
         return decryptedValue;
     }
+	
+	
 	private static Key generateKey() throws Exception {
-        Key k = new SecretKeySpec(key, "AES");
+		String actualSalt = new StringBuilder(salt).reverse().toString();
+        Key k = new SecretKeySpec(actualSalt.getBytes(), "AES");
         return k;
 	}
 	
@@ -244,17 +249,13 @@ public class LicenseManager {
 	}
 	
 	
-	public String createLicense(LicenseData licenseData){
-		String licenseKey = null;
-		synchronized (licenseKey) {
-			String name = licenseData.getName();
-			String macAddr = licenseData.getMacAddr();
-			String licenseType = licenseData.getType();
-			String validity = licenseData.getValidity();
-			
-			
-		}
+	private static LicenseContent generateLicense(LicenseContent lc){
 		
-		return licenseKey;
+		String mac = lc.getMacAddr();
+		//this is in milliseconds
+		String validity = lc.getValidity();
+		
+		return lc;
+		
 	}
 }

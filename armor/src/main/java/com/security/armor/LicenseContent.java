@@ -1,22 +1,51 @@
 package com.security.armor;
 
-public class LicenseData {
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LicenseContent {
 
 	private String name;
 	private String macAddr;
 	private String type;
 	private String validity;
 	
+	private Map<String,String> properties;
 	
-	public LicenseData(String name, String macAddr, String type, String validity) {
+	public LicenseContent(String name, String macAddr, String type, String validity) {
 		this.name = name;
 		this.macAddr = macAddr;
 		this.type= type;
 		this.validity = validity;
-				
+		this.properties = new HashMap<String,String>();
 	}
 
-
+	/**
+     * Return an unmodifiable map of properties.
+     * 
+     * @return
+     */
+    public Map<String, String> getProperties() {
+        return Collections.unmodifiableMap(this.properties);
+    }
+    
+    /**
+     * Sets the property value.
+     * 
+     * @param key
+     *            the property key
+     * @param value
+     *            the property value.
+     */
+    public void setProperty(String key, String value) {
+        if (value == null) {
+            this.properties.remove(key);
+        } else {
+            this.properties.put(key, value);
+        }
+    }
+	
 	/**
 	 * @return the name
 	 */
@@ -72,10 +101,10 @@ public class LicenseData {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof LicenseData)) {
+		if (!(obj instanceof LicenseContent)) {
 			return false;
 		}
-		LicenseData other = (LicenseData) obj;
+		LicenseContent other = (LicenseContent) obj;
 		if (macAddr == null) {
 			if (other.macAddr != null) {
 				return false;
