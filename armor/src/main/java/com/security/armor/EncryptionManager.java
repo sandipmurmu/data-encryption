@@ -4,9 +4,13 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -86,6 +90,29 @@ public class EncryptionManager {
       PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
       KeyFactory kf = KeyFactory.getInstance("RSA");
       return kf.generatePrivate(spec);
+  }
+  
+  
+  public boolean verify(byte[] data, byte[] sig) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+      // Initialize the signing algorithm with our public key
+      Signature rsaSignature = Signature.getInstance("SHA1withRSA");
+      rsaSignature.initVerify(publicKey);
+      // Update the signature algorithm with the data.
+      rsaSignature.update(data);
+      // Validate the signature
+      return rsaSignature.verify(sig);
+  }
+  
+  public byte[] sign(byte[] data) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+      if (privateKey == null) {
+          throw new UnsupportedOperationException("Can't sign when the private key is not available.");
+      }
+      // Initialize the signing algorithm with our private key
+      Signature rsaSignature = Signature.getInstance("SHA1withRSA");
+      rsaSignature.initSign(privateKey);
+      rsaSignature.update(data);
+      // Generate the signature.
+      return rsaSignature.sign();
   }
 }
 

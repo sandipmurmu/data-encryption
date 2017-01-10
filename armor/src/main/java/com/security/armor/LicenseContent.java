@@ -31,6 +31,17 @@ public class LicenseContent {
     }
     
     /**
+     * Get the property value.
+     * 
+     * @param key
+     *            the property key
+     */
+    public String getProperty(String key) {
+        return this.properties.get(key);
+    }
+
+    
+    /**
      * Sets the property value.
      * 
      * @param key
