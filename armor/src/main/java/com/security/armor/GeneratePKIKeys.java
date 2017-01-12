@@ -19,7 +19,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.sql.Savepoint;
 
-public class GenereatePKIKeys {
+public class GeneratePKIKeys {
 
 	private static void generateKeys(String keyAlgorithm, int numBits) {
 
@@ -54,9 +54,9 @@ public class GenereatePKIKeys {
 			PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
 			
 			//save public key
-			saveToFile("D:\\sandip_git\\public_key.der", publicKeyBytes);
+			saveToFile("D:\\sandip_git\\public_key.der", publicKeySpec.getEncoded());
 			//save private key
-			saveToFile("D:\\sandip_git\\private_key.der", publicKeyBytes);
+			saveToFile("D:\\sandip_git\\private_key.der", privateKeySpec.getEncoded());
 			
 			// The original and new keys are the same
 			System.out.println("  Are both private keys equal? " + privateKey.equals(privateKey2));
